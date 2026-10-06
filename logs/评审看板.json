@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "title": "C4A 技能提交评审看板",
+  "metrics": [
+    {
+      "label": "提交份数",
+      "value": "4"
+    },
+    {
+      "label": "平均综合分",
+      "value": "0.60"
+    },
+    {
+      "label": "技能包数",
+      "value": "5"
+    },
+    {
+      "label": "告警条数",
+      "value": "3"
+    },
+    {
+      "label": "范围外登记",
+      "value": "1"
+    }
+  ],
+  "level_distribution": {
+    "L1": 4
+  },
+  "ranking": [
+    {
+      "rank": 1,
+      "author": "Zhouruoying",
+      "composite": 0.68,
+      "level": "L1",
+      "missing": "skill_doc, demo, teaching_doc, ai_log"
+    },
+    {
+      "rank": 2,
+      "author": "Zhouruoying",
+      "composite": 0.68,
+      "level": "L1",
+      "missing": "skill_doc, demo, teaching_doc, ai_log"
+    },
+    {
+      "rank": 3,
+      "author": "Unknown Author",
+      "composite": 0.605,
+      "level": "L1",
+      "missing": "skill_doc, demo, teaching_doc, ai_log"
+    },
+    {
+      "rank": 4,
+      "author": "Unknown Author",
+      "composite": 0.455,
+      "level": "L1",
+      "missing": "skill_doc, demo, teaching_doc, ai_log"
+    }
+  ],
+  "excluded": [
+    {
+      "author": "Unknown Author",
+      "challenge": "C2A（推断）",
+      "composite": 0.53,
+      "reason": "挑战 C2A 不在过滤范围 C4 内"
+    }
+  ],
+  "top_gaps": [
+    {
+      "check_item": "含可运行代码/脚本/工作流",
+      "affected": 4
+    },
+    {
+      "check_item": "有 demo 证据（截图/录屏/运行记录）",
+      "affected": 4
+    },
+    {
+      "check_item": "跨平台，或明确标注适用平台",
+      "affected": 3
+    },
+    {
+      "check_item": "依赖已声明（或明确声明零依赖）",
+      "affected": 2
+    },
+    {
+      "check_item": "成功/失败判据明确（退出码或 PASS 计数）",
+      "affected": 2
+    }
+  ],
+  "generated_at": "2026-10-06T17:58:56"
+}

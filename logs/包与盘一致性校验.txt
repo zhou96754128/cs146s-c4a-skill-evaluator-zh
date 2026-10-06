@@ -1,0 +1,18 @@
+包与盘一致性校验 —— Zhouruoying_C4A_skill-evaluator.skill
+包 sha256：3e60feb49f33d6d9ab6f7970a9375a06a4e15a472db3e8da0b32bc573b02be87
+包体积：36904 字节
+包内条目 9 个（SKILL.md + references + scripts）
+
+包内文件                                               字节  sha256(前16)      与盘上文件比对
+SKILL.md                                         5315  a73e342e3cbdfb10 一致
+scripts/c4_eval.py                               6050  1c91ac390d2dac26 一致
+scripts/c4_evaluator.py                          6021  6724c3b0a6b1afa6 一致
+scripts/c4_lib.py                               13744  05909318be218f2e 一致
+scripts/c4_quality.py                           15308  3979172a12e13b31 一致
+scripts/c4_report.py                             9672  37ecef97751d950e 一致
+scripts/c4_scan.py                              10699  16ebdacccd63f91f 一致
+scripts/c4_selfcheck.py                         16047  73764dd711295009 一致
+references/c4_rubric.yaml                        7236  81d59296de4f7667 一致
+
+结论：包与盘完全一致，可提交
+（包内不含 logs/ 与 __pycache__；运行记录与看板留在仓库 logs/ 侧，不写回包内。）

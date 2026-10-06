@@ -1,0 +1,72 @@
+C4A 技能提交自动评审 —— Demo 运行记录
+技能：c4-skill-evaluator 1.0.0
+样本目录：<工作区>/C4A/_corpus/wechat_c4
+技能目录：<工作区>/C4A/Zhouruoying_C4A_skill-evaluator
+运行环境：macOS / python3 3.12.13（无第三方依赖，纯标准库）
+记录生成时间：2026-10-06
+
+说明：以下三段输出由本次真实执行直接落盘得到，未经改写；
+每段末尾附实际退出码（0 = 成功）。命令均为可直接复制的字面命令。
+
+────────────────────────────────────────────────────────────
+[1] 环境与口径确认
+────────────────────────────────────────────────────────────
+$ cd <工作区>/C4A/Zhouruoying_C4A_skill-evaluator
+$ python3 scripts/c4_evaluator.py version
+
+c4-skill-evaluator 1.0.0 (challenge C4A / ch-20260717031432-5jvqje)
+python 3.12.13
+rubric default: <工作区>/C4A/Zhouruoying_C4A_skill-evaluator/references/c4_rubric.yaml
+[退出码 0]
+
+────────────────────────────────────────────────────────────
+[2] 技能自检（19 条用例，含 13 条负例）
+────────────────────────────────────────────────────────────
+$ python3 scripts/c4_evaluator.py selfcheck
+
+c4-skill-evaluator selfcheck — 用例 19 条
+样本目录：<系统临时目录>/c4a_selfcheck（= 自检默认夹具目录；采集 38 文件 → 11 份提交）
+[PASS] P1   齐全样本判 5/5 且四条判据全 PASS  ← fp=5 composite=1.0
+[PASS] P2   齐全样本无风险标记且达 L4  ← flags=[] level=L4
+[PASS] P3   齐全样本质量分为 1.0（四条判据均 PASS）  ← 1.0
+[PASS] N4   缺 3 件必交物 → 完整性 2/5 + missing_artifacts  ← fp=2 flags=['missing_artifacts']
+[PASS] N5   缺 3 件必交物 → 判级封顶 L1、不得进 L2（留 level_cap 痕迹）  ← level=L1 raw=L2 composite=0.46 capped_by=missing_artifacts
+[PASS] N6   有技能说明无 AI 日志 → no_ai_log  ← ['missing_artifacts', 'no_ai_log']
+[PASS] N7   AI 日志无迭代标记 → one_shot_ai  ← ['one_shot_ai']
+[PASS] N8   硬编码 /Users/ 路径 → r2 判失败且 reusable 不达标  ← ❌
+[PASS] N9   有自检但无负例 → no_negative_case 扣减并留痕  ← no_negative_case
+[PASS] N10  无可运行代码 → executable 不达标  ← ❌
+[PASS] N11  输入输出含糊 → clear_io 不达标  ← ❌
+[PASS] P12  规范包结构判 valid（SKILL.md 在根 + scripts/references）  ← valid / SKILL.md 位于根目录；顶层：SKILL.md, references, scripts
+[PASS] N13  包内多出越界文件 → 判 loose 并点名  ← loose / SKILL.md 位于根目录；顶层：README.md, SKILL.md, data, scripts；越界文件：README.md, data/x.json
+[PASS] N14  伪造的 .skill（实为文本）→ ok=False / not_a_zip  ← not_a_zip
+[PASS] N15  包内 `../evil.txt` 被拒绝且不进 entries  ← rejected=['../evil.txt']
+[PASS] N16  文件名无法解析时回退 Unknown Author 并标记人工复核  ← ('Unknown Author', 'unknown')
+[PASS] N17  空目录 → 0 份提交（CLI 退出码 5 的前置条件）
+[PASS] P18  同输入复跑结果完全一致（确定性）  ← 两份 JSON 逐字节一致
+[PASS] P19  rubric 与实现同步（16 条 rule 全部有实现、权重和为 1）
+
+结果：19/19 PASS，0 FAIL
+VERDICT: GREEN — 19 条含负例的判据全部符合预期，退出码 0。
+[退出码 0]
+
+────────────────────────────────────────────────────────────
+[3] 真实对等样本评审（5 个文件 → 归并 4 份在范围内提交）
+────────────────────────────────────────────────────────────
+$ python3 scripts/c4_evaluator.py review <工作区>/C4A/_corpus/wechat_c4 \
+      --out Zhouruoying_C4A_评审报告.md \
+      --dashboard logs/评审看板.json \
+      --history logs/评审历史.jsonl
+
+[OK] 评审报告 → <工作区>/C4A/Zhouruoying_C4A_评审报告.md（4 份提交，平均分 0.60）
+[OK] 看板数据 → <工作区>/C4A/logs/评审看板.json
+[OK] 历史 → <工作区>/C4A/logs/评审历史.jsonl（累计 2 次运行）
+[退出码 0]
+
+────────────────────────────────────────────────────────────
+附：产物指纹（sha256，用于校验记录没有被后续改动影响）
+────────────────────────────────────────────────────────────
+  03a43c51d99a26819173aed73b52aa6a0fd554e70ed52ef95e02f290fe4ae61e  Zhouruoying_C4A_评审报告.md
+  eced62aef2a4943ce924c2d32cc33996d14d0b05cf142373b5eabb69f5cfa2fc  logs/评审看板.json
+  62d94086bab46a24cfc36065367c1d2fe27eb0e7e12e5b72dd438ce8737d6792  logs/评审历史.jsonl
+  81d59296de4f76679cb31cdba8a57bfbefe85546c69bc27ff5b24cd5b22e1c08  Zhouruoying_C4A_skill-evaluator/references/c4_rubric.yaml

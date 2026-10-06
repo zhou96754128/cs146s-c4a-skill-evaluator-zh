@@ -1,0 +1,162 @@
+# C4 Skill Submission Evaluation Rubric — machine-readable
+# Consumed by scripts/c4_lib.py (stdlib-only; PyYAML is used when available).
+# Baseline: c4a-skill-evaluator-starter/references/c4_rubric.yaml
+# Changes vs baseline: every check_item now carries machine-checkable `rule` ids,
+# plus level thresholds, red flags and suggestion templates. See 方案设计 §2.3.
+version: "1.1"
+challenge: C4
+
+selector:
+  # Author_Challenge_Part.ext  (e.g. Zhouruoying_C4_submit-preflight.skill)
+  filename_regex: '^(?P<author>[A-Za-z][A-Za-z0-9_\-]*)_(?P<challenge>C[0-9]+[A-Z]?[0-9]*)_(?P<part>.+)$'
+  package_extensions: [".skill", ".zip"]
+  text_extensions: [".md", ".txt", ".py", ".yaml", ".yml", ".json", ".csv", ".sh", ".mjs", ".js", ".tex", ".html"]
+  unknown_author_label: "Unknown Author"
+  challenge_filter: "C4"
+
+# Declaration timing: C4 lists the five required deliverables as an announcement pattern
+# *技能说明*, *可执行*, *demo*, *教学说明*, *AI日志*; here they are detected on disk.
+required_deliverables:
+  skill_doc:
+    label_cn: "技能说明文档"
+    filename_patterns: [skill说明, 技能说明, skill-spec, skill-specification, skill_doc, skill-doc, skill_description]
+    content_signals: [使用场景, 解决什么问题, 适用场景, "use case", 什么时候用]
+    extensions: [".md", ".pdf", ".docx", ".txt", ".html"]
+  executable_content:
+    label_cn: "可执行内容"
+    filename_patterns: [技能, skill]
+    content_signals: ["```", "def ", "class ", "import ", "---\nname:"]
+    extensions: [".skill", ".zip", ".py", ".md", ".sh", ".mjs"]
+  demo:
+    label_cn: "Demo（截图/录屏/运行记录）"
+    filename_patterns: [demo, 演示, 截图, screen, 录屏, 运行记录, run-record]
+    extensions: [".mp4", ".mov", ".webm", ".png", ".jpg", ".jpeg", ".gif", ".txt", ".md"]
+  teaching_doc:
+    label_cn: "教学说明"
+    filename_patterns: [教学说明, 教学, tutorial, teaching, 上手指南, quickstart, how-to]
+    content_signals: [上手, 步骤, 常见坑, 安装, 注意事项, "getting started", "step by step"]
+    extensions: [".md", ".pdf", ".docx", ".txt", ".html"]
+  ai_log:
+    label_cn: "AI 生成日志"
+    filename_patterns: [AI日志, ai_log, ai-log, ai_日志, ai记录]
+    content_signals: [使用的 AI, AI 工具, prompt, 迭代, ChatGPT, Claude, DeepSeek, Codex]
+    extensions: [".md", ".pdf", ".docx", ".txt", ".html"]
+
+quality_criteria:
+  reusable:
+    label_cn: "可复用"
+    weight: 0.25
+    positive_signals: [安装, install, 环境要求, requirements, dependencies, pip install, npm install, 兼容, 零依赖]
+    negative_signals: ["/Users/", "/home/", "C:\\", 我的电脑, "api_key = "]
+    check_items:
+      - id: r1
+        rule: install_or_env_mention
+        label: "有安装或环境说明"
+      - id: r2
+        rule: no_hardcoded_paths
+        label: "无硬编码绝对路径"
+        disqualifying: true
+      - id: r3
+        rule: deps_declared
+        label: "依赖已声明（或明确声明零依赖）"
+      - id: r4
+        rule: platform_scope_noted
+        label: "跨平台，或明确标注适用平台"
+  executable:
+    label_cn: "可执行"
+    weight: 0.25
+    positive_signals: ["```python", "```bash", "def ", "class ", "---\nname:", workflow, pipeline]
+    negative_signals: []
+    check_items:
+      - id: e1
+        rule: runnable_code_present
+        label: "含可运行代码/脚本/工作流"
+      - id: e2
+        rule: package_structure_valid
+        label: ".skill 包结构有效（SKILL.md 在根，仅 scripts/references）"
+      - id: e3
+        rule: entry_script_nonempty
+        label: "入口脚本非空（>200 字节）"
+      - id: e4
+        rule: frontmatter_present
+        label: "SKILL.md 具备 YAML frontmatter"
+  verifiable:
+    label_cn: "可验证"
+    weight: 0.25
+    positive_signals: [测试, test, example, 示例, 预期, expected, selfcheck, 自检, 用例]
+    negative_signals: []
+    check_items:
+      - id: v1
+        rule: tests_present
+        label: "有测试/自检与可运行命令"
+      - id: v2
+        rule: expected_output_stated
+        label: "写明了预期输出"
+      - id: v3
+        rule: demo_evidence_present
+        label: "有 demo 证据（截图/录屏/运行记录）"
+      - id: v4
+        rule: success_criteria_present
+        label: "成功/失败判据明确（退出码或 PASS 计数）"
+  clear_io:
+    label_cn: "IO 明确"
+    weight: 0.25
+    positive_signals: [输入, 输出, input, output, "→", 接受, 返回, generates, produces, returns]
+    negative_signals: []
+    check_items:
+      - id: i1
+        rule: io_oneliner
+        label: "有一句「输入X，输出Y」"
+      - id: i2
+        rule: input_formats_specified
+        label: "输入格式/类型已说明"
+      - id: i3
+        rule: output_formats_specified
+        label: "输出格式/类型已说明"
+      - id: i4
+        rule: edge_cases_noted
+        label: "边界/异常输入已说明"
+
+scoring:
+  completeness_score: "min(files_present, 5) / 5.0"
+  criterion_rating: ">=2 check items satisfied => PASS(1.0); ==1 => PARTIAL(0.5); ==0 => FAIL(0.0)"
+  quality_score: "sum(criterion_scores) / 4.0"
+  composite: "completeness_score * 0.4 + quality_score * 0.6"
+  level_thresholds:
+    L1: 0.20
+    L2: 0.45
+    L3: 0.70
+    L4: 0.85
+  level_cap: "files_present < 3 => level capped at L1 (必交物不足 3/5 者不进 L2)"
+
+red_flags:
+  - id: missing_artifacts
+    when: "files_present < 5"
+    effect: "artifactCompleteness capped low"
+  - id: no_ai_log
+    when: "skill_doc present and ai_log missing"
+    effect: "reflectionQuality capped at 5"
+  - id: one_shot_ai
+    when: "ai_log has <2 iteration markers"
+    effect: "aiUsage capped at 5"
+  - id: no_negative_case
+    when: "verifiable: v1 PASS but no negative-case marker (负例/异常/失败/拒绝)"
+    effect: "deduct 1 verifiable check item"
+
+suggestion_templates:
+  r1: "在技能说明中补一节「安装/环境要求」，写明 Python 版本与依赖。"
+  r2: "把硬编码路径改为命令行参数或相对路径，否则换台机器就跑不起来。"
+  r3: "补 requirements 声明；若确实零依赖，请显式写出「零依赖，仅用标准库」。"
+  r4: "标注适用平台，或去掉平台专属命令，让别的系统也能用。"
+  e1: "补一个真正可运行的脚本（不是伪代码），并在说明里给出运行命令。"
+  e2: "把 .skill 包整理为 SKILL.md 在根 + scripts/ + references/ 三件套。"
+  e3: "入口脚本内容过短/为空，补齐实现逻辑。"
+  e4: "SKILL.md 顶部补 YAML frontmatter（name + description）。"
+  v1: "补自检/测试入口，让评审者一条命令就能复现结论。"
+  v2: "写出预期输出样例（PASS 数量、退出码或结果截图）。"
+  v3: "补 demo 证据：截图、录屏或可复现的运行记录文件。"
+  v4: "明确成功/失败判据，例如「manifest 校验失败时退出码为 1」。"
+  i1: "在说明开头加一句「输入X，输出Y」。"
+  i2: "显式列出输入的类型与格式，以及怎么获取输入。"
+  i3: "显式列出输出的格式与落盘位置。"
+  i4: "补边界与异常处理说明（空目录、超大文件、损坏包）。"
