@@ -60,8 +60,12 @@ python3 scripts/c4_evaluator.py review ../sample_corpus \
 | `Zhouruoying_C4A_AI日志.md` | 与 AI 协作逐轮留痕：采纳 5 / 修改 4 / 驳回 3 |
 | `Zhouruoying_C4A_AAR.md` | 复盘 7 节，含 ΔR 归因 |
 | `Zhouruoying_C4A_项目自评.md` | 交付物清单、可复现命令、五维自评区间 |
+| `Zhouruoying_C4A_拿来说明.md` | 从 `wechat-doc-mapper` 拿了什么 / 改了什么 / 为什么（4 个拿来点、5 处改动、3 处有意不拿），逐条可回原文复核 |
+| `Zhouruoying_C4A_评审详表.xlsx` | Excel 详表（挑战正文要求的输出格式）：总览 / 排名表 / 高频失分点 / 范围外登记四个工作表，数值与 `logs/评审看板.json` 同源 |
 | `sample_corpus/` | 复现用样本（作者本人 C4 / C4B 提交 + 课程材料示例包） |
 | `logs/` | 评审看板 JSON、评审历史 JSONL、仓库内复跑记录、包与盘一致性校验记录 |
+
+挑战声明的**六件必交物**在本仓库中均以 `姓名拼音_C4A_内容描述` 命名呈现：方案设计 → `Zhouruoying_C4A_方案设计.md`；技能包 → `Zhouruoying_C4A_skill-evaluator.skill`（源码目录同名）；评审报告、教学说明、AI 日志、拿来说明 → 同名 `.md`。
 
 ## 可复现性说明
 
